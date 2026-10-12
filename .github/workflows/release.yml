@@ -46,6 +46,10 @@ jobs:
             runner: ubuntu-22.04
             c_compiler: gcc-11
             cxx_compiler: g++-11
+          - platform: linux_aarch64
+            runner: ubuntu-22.04-arm
+            c_compiler: gcc-11
+            cxx_compiler: g++-11
           - platform: win_x86_64
             runner: windows-2025
           - platform: macos_x86_64
@@ -121,14 +125,14 @@ jobs:
           merge-multiple: true
           path: dist
 
-      # Four platforms, two dependencies each: anything less means a consumer
+      # Five platforms, two dependencies each: anything less means a consumer
       # on the missing platform would get a download failure instead of a
       # library, so refuse to publish a partial set.
       - name: "Check the set is complete"
         run: |
           set -euo pipefail
           missing=0
-          for platform in linux_x86_64 win_x86_64 macos_x86_64 macos_arm64; do
+          for platform in linux_x86_64 linux_aarch64 win_x86_64 macos_x86_64 macos_arm64; do
             for dep in hdf5 mbedtls; do
               if ! ls dist/${dep}-*-${platform}.tar.gz >/dev/null 2>&1; then
                 echo "ERROR: missing archive for ${dep} on ${platform}" >&2

@@ -30,12 +30,16 @@ jobs:
     runs-on: ${{ matrix.runner }}
     strategy:
       # Keep going after one platform fails: knowing whether a version bump
-      # breaks one platform or all four is the useful signal.
+      # breaks one platform or all five is the useful signal.
       fail-fast: false
       matrix:
         include:
           - platform: linux_x86_64
             runner: ubuntu-22.04
+            c_compiler: gcc-11
+            cxx_compiler: g++-11
+          - platform: linux_aarch64
+            runner: ubuntu-22.04-arm
             c_compiler: gcc-11
             cxx_compiler: g++-11
           - platform: win_x86_64

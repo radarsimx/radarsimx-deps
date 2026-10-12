@@ -30,7 +30,7 @@ CMakeLists.txt          Superbuild: one ExternalProject per recipe
 build.sh / build.bat    Entry points
 verify.sh               Sanity check on the staged output
 cmake/
-  platform.cmake        Platform triplet (win_x86_64, linux_x86_64, macos_*)
+  platform.cmake        Platform triplet (win_x86_64, linux_*, macos_*)
   baseline.cmake        The shared ABI baseline every dependency is built with
   stage_hdf5.cmake      Copies HDF5 headers and libraries into output/
   stage_mbedtls.cmake   Copies mbedTLS headers and libraries into output/
@@ -136,11 +136,12 @@ cmake --build build --parallel
 
 | Workflow | Trigger | What it does |
 |---|---|---|
-| `build.yml` | push / PR to `main`, manual | Builds every dependency on all four platforms, verifies the staged output, uploads it as an artifact |
-| `release.yml` | push of a `v*` tag, manual | Same, plus packaging; refuses to publish unless all four platforms produced both archives, then creates the GitHub release |
+| `build.yml` | push / PR to `main`, manual | Builds every dependency on all five platforms, verifies the staged output, uploads it as an artifact |
+| `release.yml` | push of a `v*` tag, manual | Same, plus packaging; refuses to publish unless all five platforms produced both archives, then creates the GitHub release |
 
-Platforms: `linux_x86_64` (ubuntu-22.04, GCC 11), `win_x86_64` (windows-2025,
-MSVC), `macos_x86_64` (macos-26-intel, Clang), `macos_arm64` (macos-26, Clang).
+Platforms: `linux_x86_64` (ubuntu-22.04, GCC 11), `linux_aarch64`
+(ubuntu-22.04-arm, GCC 11), `win_x86_64` (windows-2025, MSVC), `macos_x86_64`
+(macos-26-intel, Clang), `macos_arm64` (macos-26, Clang).
 The platform name a build stages into is derived from the runner by
 `cmake/platform.cmake`, not from the matrix entry, so the two cannot drift.
 
